@@ -3,7 +3,8 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from client_support.domain.run import ExecutionRun
+from client_support.domain.run import ExecutionRun, RunStatus
+from client_support.domain.states import TicketState
 from client_support.domain.ticket import Ticket
 from client_support.persistence.models import EventModel, RunModel, TicketModel
 from client_support.telemetry import DomainEvent
@@ -34,7 +35,7 @@ class SqlAlchemyTicketRepository:
             id=model.id,
             subject=model.subject,
             requester_email=model.requester_email,
-            state=model.state,
+            state=TicketState(model.state),
             category=model.category,
             support_level=model.support_level,
             metadata=model.metadata_json,
@@ -62,7 +63,7 @@ class SqlAlchemyRunRepository:
         return ExecutionRun(
             id=model.id,
             ticket_id=model.ticket_id,
-            status=model.status,
+            status=RunStatus(model.status),
             metadata=model.metadata_json,
         )
 
