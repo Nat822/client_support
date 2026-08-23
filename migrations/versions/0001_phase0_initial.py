@@ -8,6 +8,7 @@ from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
+from pgvector.sqlalchemy import Vector
 
 revision: str = "0001_phase0_initial"
 down_revision: Union[str, None] = None
@@ -102,7 +103,7 @@ def upgrade() -> None:
         sa.Column("version", sa.Integer(), nullable=False),
         sa.Column("content", sa.Text(), nullable=False),
         sa.Column("metadata_json", postgresql.JSONB(), nullable=False, server_default=sa.text("'{}'::jsonb")),
-        sa.Column("embedding", postgresql.JSONB()),
+        sa.Column("embedding", Vector(1536)),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
     )
     op.create_index("ix_knowledge_items_category", "knowledge_items", ["category"])
