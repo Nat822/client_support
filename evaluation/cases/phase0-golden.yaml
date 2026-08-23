@@ -1,0 +1,30 @@
+# Synthetic golden cases. No real customer tickets are present yet.
+- id: synthetic-001
+  description: exact email identity and fully automated category
+  input:
+    sender_email: alice@example.com
+    status: new
+    subject: Where is my order?
+  expected:
+    identity_method: exact_email
+    review_required: false
+
+- id: synthetic-002
+  description: fuzzy identity must enter review
+  input:
+    sender_email: alice@customer.example
+    status: in_progress
+    subject: Please check my order
+  expected:
+    identity_method: fuzzy
+    review_required: true
+
+- id: synthetic-003
+  description: unsupported category must enter review
+  input:
+    sender_email: bob@example.com
+    status: new
+    subject: Unsupported request
+  expected:
+    identity_method: exact_email
+    review_required: true
