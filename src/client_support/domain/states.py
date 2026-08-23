@@ -1,5 +1,6 @@
 from enum import StrEnum
 
+
 class TicketState(StrEnum):
     INGESTED = "ingested"
     IDENTITY_PENDING = "identity_pending"
@@ -11,6 +12,7 @@ class TicketState(StrEnum):
     POLICY_GATE = "policy_gate"
     HUMAN_REVIEW = "human_review"
     COMPLETED = "completed"
+
 
 _ALLOWED: dict[TicketState, set[TicketState]] = {
     TicketState.INGESTED: {TicketState.IDENTITY_PENDING},
@@ -25,11 +27,14 @@ _ALLOWED: dict[TicketState, set[TicketState]] = {
     TicketState.COMPLETED: set(),
 }
 
+
 def can_transition(current: TicketState, target: TicketState) -> bool:
     return target in _ALLOWED[current]
 
+
 class InvalidTransition(ValueError):
     pass
+
 
 class TicketStateMachine:
     def __init__(self, state: TicketState = TicketState.INGESTED) -> None:
