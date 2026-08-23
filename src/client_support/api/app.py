@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 from client_support.contracts.identity import IdentityResolutionMethod
 from client_support.pipeline.execution import Phase0Execution
@@ -10,7 +10,7 @@ execution = Phase0Execution()
 
 class Phase0TicketRequest(BaseModel):
     subject: str
-    requester_email: EmailStr
+    requester_email: str
     identity_method: IdentityResolutionMethod = IdentityResolutionMethod.EXACT_EMAIL
 
 
@@ -23,7 +23,7 @@ def health() -> dict[str, str]:
 def phase0_run(request: Phase0TicketRequest) -> dict[str, object]:
     run = execution.run(
         subject=request.subject,
-        requester_email=str(request.requester_email),
+        requester_email=request.requester_email,
         identity_method=request.identity_method,
     )
     ticket = execution.tickets.get(run.ticket_id)
