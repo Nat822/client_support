@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any
 from uuid import UUID
 
 from pgvector.sqlalchemy import Vector
@@ -20,7 +21,7 @@ class TicketModel(Base):
     state: Mapped[str] = mapped_column(String(64), index=True)
     category: Mapped[str | None] = mapped_column(String(255), nullable=True)
     support_level: Mapped[str | None] = mapped_column(String(32), nullable=True)
-    metadata_json: Mapped[dict] = mapped_column(JSONB, default=dict)
+    metadata_json: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
@@ -29,7 +30,7 @@ class CustomerModel(Base):
 
     id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True)
     external_id: Mapped[str] = mapped_column(String(255), unique=True, index=True)
-    metadata_json: Mapped[dict] = mapped_column(JSONB, default=dict)
+    metadata_json: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
@@ -42,7 +43,7 @@ class RunModel(Base):
     agent_version: Mapped[str | None] = mapped_column(String(255), nullable=True)
     routing_version: Mapped[str | None] = mapped_column(String(255), nullable=True)
     policy_version: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    metadata_json: Mapped[dict] = mapped_column(JSONB, default=dict)
+    metadata_json: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
@@ -55,7 +56,7 @@ class EventModel(Base):
     ticket_id: Mapped[UUID] = mapped_column(ForeignKey("tickets.id"), index=True)
     sequence: Mapped[int] = mapped_column(Integer)
     event_type: Mapped[str] = mapped_column(String(255), index=True)
-    payload: Mapped[dict] = mapped_column(JSONB, default=dict)
+    payload: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
@@ -67,8 +68,8 @@ class ToolCallModel(Base):
     tool_name: Mapped[str] = mapped_column(String(255), index=True)
     status: Mapped[str] = mapped_column(String(64))
     risk_level: Mapped[str] = mapped_column(String(32))
-    request: Mapped[dict] = mapped_column(JSONB, default=dict)
-    result: Mapped[dict] = mapped_column(JSONB, default=dict)
+    request: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
+    result: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
@@ -77,9 +78,9 @@ class PolicyDecisionModel(Base):
 
     id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True)
     run_id: Mapped[UUID] = mapped_column(ForeignKey("runs.id"), index=True)
-    decision: Mapped[str] = mapped_column(String(32))
-    reasons: Mapped[list] = mapped_column(JSONB, default=list)
-    context: Mapped[dict] = mapped_column(JSONB, default=dict)
+    decision: Mapped[str] = mapped_column(String(32), nullable=False)
+    reasons: Mapped[list[Any]] = mapped_column(JSONB, default=list)
+    context: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
@@ -90,7 +91,7 @@ class KnowledgeItemModel(Base):
     category: Mapped[str] = mapped_column(String(255), index=True)
     version: Mapped[int] = mapped_column(Integer)
     content: Mapped[str] = mapped_column(Text)
-    metadata_json: Mapped[dict] = mapped_column(JSONB, default=dict)
+    metadata_json: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     embedding: Mapped[list[float] | None] = mapped_column(Vector(1536), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
@@ -99,7 +100,7 @@ class EvaluationCaseModel(Base):
     __tablename__ = "evaluation_cases"
 
     id: Mapped[str] = mapped_column(String(255), primary_key=True)
-    input_data: Mapped[dict] = mapped_column(JSONB)
-    expected: Mapped[dict] = mapped_column(JSONB)
+    input_data: Mapped[dict[str, Any]] = mapped_column(JSONB)
+    expected: Mapped[dict[str, Any]] = mapped_column(JSONB)
     source: Mapped[str] = mapped_column(String(64))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
