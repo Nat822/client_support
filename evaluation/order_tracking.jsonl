@@ -1,0 +1,4 @@
+{"text":"Where is order ORD-001?","expected_category":"order_tracking","expected_order_numbers":["ORD-001"]}
+{"text":"Can you check order ORD-002?","expected_category":"order_tracking","expected_order_numbers":["ORD-002"]}
+{"text":"Where is my package?","expected_category":"order_tracking","expected_order_numbers":[]}
+{"text":"I need help changing my billing address","expected_category":"billing","expected_order_numbers":[]}
