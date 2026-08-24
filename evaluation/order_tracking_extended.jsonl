@@ -1,0 +1,20 @@
+{"text":"Where is order ORD-003?","expected_category":"order_tracking","expected_order_numbers":["ORD-003"]}
+{"text":"Please track ORD-004 for me","expected_category":"order_tracking","expected_order_numbers":["ORD-004"]}
+{"text":"What is the status of order ORD-005?","expected_category":"order_tracking","expected_order_numbers":["ORD-005"]}
+{"text":"Can you tell me where package ORD-006 is?","expected_category":"order_tracking","expected_order_numbers":["ORD-006"]}
+{"text":"I have not received my order yet","expected_category":"order_tracking","expected_order_numbers":[]}
+{"text":"My parcel has not arrived","expected_category":"order_tracking","expected_order_numbers":[]}
+{"text":"Can you check the delivery status?","expected_category":"order_tracking","expected_order_numbers":[]}
+{"text":"Where is my shipment?","expected_category":"order_tracking","expected_order_numbers":[]}
+{"text":"Please locate order ORD-007, it is overdue","expected_category":"order_tracking","expected_order_numbers":["ORD-007"]}
+{"text":"Tracking request for ORD-008","expected_category":"order_tracking","expected_order_numbers":["ORD-008"]}
+{"text":"I need to update my billing address","expected_category":"billing","expected_order_numbers":[]}
+{"text":"Why was I charged twice?","expected_category":"billing","expected_order_numbers":[]}
+{"text":"Please send me my invoice","expected_category":"billing","expected_order_numbers":[]}
+{"text":"I have a question about my payment","expected_category":"billing","expected_order_numbers":[]}
+{"text":"Can you explain this charge on my account?","expected_category":"billing","expected_order_numbers":[]}
+{"text":"My card payment failed","expected_category":"billing","expected_order_numbers":[]}
+{"text":"I need a copy of my receipt","expected_category":"billing","expected_order_numbers":[]}
+{"text":"Where can I find my billing history?","expected_category":"billing","expected_order_numbers":[]}
+{"text":"My package ORD-009 is delayed","expected_category":"order_tracking","expected_order_numbers":["ORD-009"]}
+{"text":"Please investigate delivery for ORD-010","expected_category":"order_tracking","expected_order_numbers":["ORD-010"]}

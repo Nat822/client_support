@@ -27,7 +27,7 @@ jobs:
     env:
       NEURALDEEP_API_KEY: ${{ secrets.NEURALDEEP_API_KEY }}
       NEURALDEEP_MODEL: ${{ inputs.model }}
-      NEURALDEEP_DATASET: ${{ inputs.mode == 'smoke' && 'evaluation/order_tracking_smoke.jsonl' || 'evaluation/order_tracking.jsonl' }}
+      NEURALDEEP_DATASET: ${{ inputs.mode == 'smoke' && 'evaluation/order_tracking_smoke.jsonl' || 'evaluation/order_tracking_extended.jsonl' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -48,4 +48,11 @@ jobs:
           fi
 
       - name: Run NeuralDeep evaluation
-        run: python scripts/evaluate_neuraldeep.py
+        run: python scripts/evaluate_neuraldeep.py | tee neuraldeep-evaluation.json
+
+      - name: Upload evaluation result
+        uses: actions/upload-artifact@v4
+        with:
+          name: neuraldeep-evaluation-result
+          path: neuraldeep-evaluation.json
+          if-no-files-found: error
