@@ -1,4 +1,4 @@
-from collections.abc import Protocol
+from typing import Protocol
 from uuid import UUID
 
 from client_support.domain.run import ExecutionRun
