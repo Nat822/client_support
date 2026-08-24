@@ -1,14 +1,17 @@
-"""Explicit, local-only NeuralDeep evaluation entry point.
-
-This script requires NEURALDEEP_API_KEY and is intentionally not part of CI.
-"""
+"""Explicit local/CI NeuralDeep evaluation entry point."""
 
 import json
 import os
+from pathlib import Path
 
 from client_support.evaluation.order_tracking import OrderTrackingCase
 from client_support.evaluation.real_provider import evaluate_real_provider
 from client_support.providers.neuraldeep import NeuralDeepSGRProvider
+
+
+def load_cases(path: Path) -> list[OrderTrackingCase]:
+    with path.open(encoding="utf-8") as handle:
+        return [OrderTrackingCase(**json.loads(line)) for line in handle if line.strip()]
 
 
 def main() -> None:
@@ -17,14 +20,13 @@ def main() -> None:
         raise SystemExit("NEURALDEEP_API_KEY is required")
 
     model = os.environ.get("NEURALDEEP_MODEL", "qwen3.6-35b-a3b")
+    dataset = os.environ.get("NEURALDEEP_DATASET", "evaluation/order_tracking.jsonl")
     provider = NeuralDeepSGRProvider(api_key=api_key, model=model)
+    result = evaluate_real_provider(provider, load_cases(Path(dataset)))
 
-    with open("evaluation/order_tracking.jsonl", encoding="utf-8") as handle:
-        cases = [OrderTrackingCase(**json.loads(line)) for line in handle if line.strip()]
-
-    result = evaluate_real_provider(provider, cases)
     print(json.dumps({
         "model": model,
+        "dataset": dataset,
         "total": result.total,
         "category_accuracy": result.category_accuracy,
         "extraction_accuracy": result.extraction_accuracy,
