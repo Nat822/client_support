@@ -22,18 +22,28 @@ def test_runtime_executes_lookup_through_policy_boundary() -> None:
         {"ORD-123456": OrderRecord(order_number="ORD-123456", status="in_transit")}
     ).execute(
         run_id=uuid4(),
-        request=OrderTrackingRequest(order_numbers=["ORD-123456"], raw_request="Where is it?"),
+        request=OrderTrackingRequest(
+            order_numbers=["ORD-123456"], raw_request="Where is it?"
+        ),
     )
 
     assert result.status == "completed"
     assert result.policy_decision.value == "allow"
-    assert result.order == {"order_number": "ORD-123456", "status": "in_transit", "carrier": None, "tracking_number": None, "estimated_delivery": None}
+    assert result.order == {
+        "order_number": "ORD-123456",
+        "status": "in_transit",
+        "carrier": None,
+        "tracking_number": None,
+        "estimated_delivery": None,
+    }
 
 
 def test_runtime_routes_unknown_order_to_human_review() -> None:
     result = runtime({}).execute(
         run_id=uuid4(),
-        request=OrderTrackingRequest(order_numbers=["ORD-999999"], raw_request="Where is it?"),
+        request=OrderTrackingRequest(
+            order_numbers=["ORD-999999"], raw_request="Where is it?"
+        ),
     )
 
     assert result.status == "human_review"
@@ -44,7 +54,9 @@ def test_runtime_routes_unknown_order_to_human_review() -> None:
 def test_runtime_routes_missing_order_to_human_review() -> None:
     result = runtime({}).execute(
         run_id=uuid4(),
-        request=OrderTrackingRequest(order_numbers=[], raw_request="Where is my package?"),
+        request=OrderTrackingRequest(
+            order_numbers=[], raw_request="Where is my package?"
+        ),
     )
 
     assert result.status == "human_review"
