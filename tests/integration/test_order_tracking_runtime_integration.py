@@ -3,14 +3,24 @@ from uuid import uuid4
 from client_support.application.order_tracking_runtime import OrderTrackingRuntime
 from client_support.contracts.order_tracking import OrderRecord, OrderTrackingRequest
 from client_support.policy.engine import PolicyEngine
+from client_support.policy.tool_policy import ToolDefinition, ToolRisk
 from client_support.tools.order_lookup import OrderLookupTool
-from client_support.tools.registry import ToolDefinition, ToolRegistry
+from client_support.tools.registry import RegisteredTool, ToolRegistry
 from client_support.tools.runtime import ToolRuntime
 
 
 def make_runtime() -> OrderTrackingRuntime:
     registry = ToolRegistry()
-    registry.register(ToolDefinition(name="lookup_order", description="Look up an order"))
+    registry.register(
+        RegisteredTool(
+            definition=ToolDefinition(
+                name="lookup_order",
+                description="Look up an order",
+                risk=ToolRisk.READ,
+            ),
+            handler=lambda _: {},
+        )
+    )
     records = {"ORD-001": OrderRecord(order_number="ORD-001", status="in_transit")}
     return OrderTrackingRuntime(
         ToolRuntime(registry, PolicyEngine()),

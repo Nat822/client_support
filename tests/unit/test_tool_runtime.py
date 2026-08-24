@@ -2,17 +2,21 @@ from uuid import uuid4
 
 from client_support.contracts.policy import PolicyContext
 from client_support.policy.engine import PolicyEngine
-from client_support.tools.registry import ToolDefinition, ToolRegistry
+from client_support.policy.tool_policy import ToolDefinition, ToolRisk
+from client_support.tools.registry import RegisteredTool, ToolRegistry
 from client_support.tools.runtime import ToolRuntime
 
 
 def test_tool_runtime_blocks_before_handler_for_fuzzy_identity() -> None:
     registry = ToolRegistry()
     registry.register(
-        ToolDefinition(
-            name="send_reply",
-            description="Send customer reply",
-            risk_level="write",
+        RegisteredTool(
+            definition=ToolDefinition(
+                name="send_reply",
+                description="Send customer reply",
+                risk=ToolRisk.CUSTOMER_FACING,
+            ),
+            handler=lambda _: {"sent": True},
         )
     )
     runtime = ToolRuntime(registry, PolicyEngine())
@@ -42,7 +46,16 @@ def test_tool_runtime_blocks_before_handler_for_fuzzy_identity() -> None:
 
 def test_tool_runtime_executes_only_after_policy_allows() -> None:
     registry = ToolRegistry()
-    registry.register(ToolDefinition(name="lookup_order", description="Look up an order"))
+    registry.register(
+        RegisteredTool(
+            definition=ToolDefinition(
+                name="lookup_order",
+                description="Look up an order",
+                risk=ToolRisk.READ,
+            ),
+            handler=lambda args: {"order_id": args["order_id"]},
+        )
+    )
     runtime = ToolRuntime(registry, PolicyEngine())
 
     execution = runtime.execute(
