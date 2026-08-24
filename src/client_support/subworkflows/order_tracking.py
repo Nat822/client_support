@@ -1,5 +1,5 @@
 import re
-from typing import Any, Protocol
+from typing import Protocol
 
 from client_support.contracts.order_tracking import OrderRecord, OrderTrackingRequest
 
@@ -12,7 +12,12 @@ ORDER_NUMBER_RE = re.compile(r"\b(?:ORD[-_ ]?)?\d{4,12}\b", re.IGNORECASE)
 
 
 def extract_order_tracking_request(text: str, customer_id: str | None = None) -> OrderTrackingRequest:
-    numbers = list(dict.fromkeys(match.group(0).upper().replace(" ", "-") for match in ORDER_NUMBER_RE.finditer(text)))
+    numbers = list(
+        dict.fromkeys(
+            match.group(0).upper().replace(" ", "-")
+            for match in ORDER_NUMBER_RE.finditer(text)
+        )
+    )
     return OrderTrackingRequest(order_numbers=numbers, customer_id=customer_id, raw_request=text)
 
 
