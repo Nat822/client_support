@@ -38,12 +38,7 @@ class ToolRuntime:
         if tool is None:
             raise ValueError(f"Unknown tool: {tool_name}")
 
-        call = ToolCall(
-            id=uuid4(),
-            run_id=run_id,
-            tool_name=tool_name,
-            arguments=arguments,
-        )
+        call = ToolCall(id=uuid4(), run_id=run_id, tool_name=tool_name, arguments=arguments)
         decision = self.policy.evaluate(policy_context)
         if decision.decision is not PolicyDecisionType.ALLOW:
             return ToolExecution(
@@ -51,7 +46,7 @@ class ToolRuntime:
                 result=ToolResult(
                     call_id=call.id,
                     status="blocked",
-                    data={"reason": decision.reason},
+                    data={"reasons": decision.reasons},
                 ),
             )
 
