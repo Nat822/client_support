@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Protocol
 
 from client_support.agent.nextstep import AgentContext, AgentResult, NextStepAgent
 from client_support.agent.planner import LLMNextStepPlanner
@@ -6,10 +7,14 @@ from client_support.policy.tool_policy import PolicyDecision, PolicyEngine, Tool
 from client_support.agent.nextstep import ToolCall, ToolResult
 
 
+class ToolHandler(Protocol):
+    def __call__(self, arguments: dict[str, object]) -> dict[str, object]: ...
+
+
 @dataclass(slots=True)
 class RegisteredTool:
     definition: ToolDefinition
-    handler: object
+    handler: ToolHandler
 
 
 class PolicyAwareToolRuntime:
