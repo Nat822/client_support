@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Protocol
 
-from client_support.agent.nextstep import AgentContext, AgentPlan, ToolCall, ToolResult
+from client_support.agent.nextstep import AgentContext, AgentPlan, ToolResult
 
 
 class PlannerProvider(Protocol):
