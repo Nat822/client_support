@@ -1,0 +1,31 @@
+name: NeuralDeep Planner Smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: NeuralDeep model
+        required: true
+        default: qwen3.6-35b-a3b
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      NEURALDEEP_API_KEY: ${{ secrets.NEURALDEEP_API_KEY }}
+      NEURALDEEP_MODEL: ${{ inputs.model }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install --upgrade pip && pip install -e .
+      - name: Validate secret
+        run: test -n "$NEURALDEEP_API_KEY"
+      - name: Live NeuralDeep planner smoke
+        run: python scripts/test_neuraldeep_planner.py
