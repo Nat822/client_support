@@ -11,6 +11,7 @@ class NeuralDeepPlannerProvider:
     api_key: str
     model: str
     base_url: str
+    timeout_seconds: float = 120.0
 
     @classmethod
     def from_environment(cls) -> "NeuralDeepPlannerProvider":
@@ -21,6 +22,7 @@ class NeuralDeepPlannerProvider:
             api_key=api_key,
             model=os.environ.get("NEURALDEEP_MODEL", "qwen3.6-35b-a3b"),
             base_url=os.environ.get("NEURALDEEP_BASE_URL", "https://api.neuraldeep.ru/v1/chat/completions"),
+            timeout_seconds=float(os.environ.get("NEURALDEEP_TIMEOUT_SECONDS", "120")),
         )
 
     def plan(self, *, context: AgentContext, history: list[ToolResult]) -> AgentPlan:
@@ -51,7 +53,7 @@ class NeuralDeepPlannerProvider:
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
         })
-        with request.urlopen(req, timeout=30) as response:
+        with request.urlopen(req, timeout=self.timeout_seconds) as response:
             body = json.loads(response.read())
         content = body["choices"][0]["message"]["content"]
         data = json.loads(content)
